@@ -3,8 +3,15 @@ import org.typelevel.sbt.tpolecat.*
 ThisBuild / organization := "hotwheels"
 ThisBuild / scalaVersion := "2.13.12"
 
-lazy val root = (project in file(".")).settings(
+lazy val root = (project in file("."))
+  .enablePlugins(DockerPlugin)
+  .enablePlugins(AshScriptPlugin)
+  .settings(
   name := "hotwheels",
+  Docker / packageName := "hotwheels-app",
+  dockerBaseImage := "eclipse-temurin:11-jre-jammy",
+  dockerExposedPorts ++= Seq(8080),
+  dockerUpdateLatest := true,
   libraryDependencies ++= Seq(
     // "core" module - IO, IOApp, schedulers
     // This pulls in the kernel and std modules automatically.

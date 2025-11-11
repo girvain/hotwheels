@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  hotwheels:
+    restart: always
+    image: hotwheels-app:latest
+    network_mode: host
+    environment:
+      - DEBUG=false
+      - SC_APP_ENV=test
+      - SC_POSTGRES_PASSWORD=my-password

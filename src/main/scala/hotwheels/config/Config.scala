@@ -36,7 +36,7 @@ object Config {
             port = 5432,
             user = "postgres",
             password = postgresPassword,
-            database = "store",
+            database = "hotwheels_store", // TODO this will change for template
             max = 10
           ),
           HttpServerConfig(
