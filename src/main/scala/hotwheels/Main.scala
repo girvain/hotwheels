@@ -1,10 +1,9 @@
 package hotwheels
 
-import cats.effect.{IO, IOApp}
+import cats.effect._
 import hotwheels.config.Config
+import hotwheels.modules.HttpApi
 import hotwheels.resources.{AppResources, MkHttpServer}
-import org.http4s.HttpRoutes
-import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
@@ -18,8 +17,8 @@ object Main extends IOApp.Simple {
         AppResources.make[IO](cfg)
           .map { _ => // res
             // combine and plug in resources, wire up modules...
-            val httpApp = HttpRoutes.empty[IO].orNotFound
-            cfg -> httpApp
+            val httpApp = HttpApi.make[IO]()
+            cfg -> httpApp.httpApp
           }
           .flatMap {
             case (cfg, httpApp) =>
