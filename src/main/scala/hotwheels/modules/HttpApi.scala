@@ -1,6 +1,7 @@
 package hotwheels.modules
 
 import cats.effect.Async
+import hotwheels.http.VehicleRoutes
 import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.middleware._
@@ -15,10 +16,12 @@ object HttpApi {
 
 sealed abstract class HttpApi[F[_] : Async] {
 
-  private val openRoutes: HttpRoutes[F] = HttpRoutes.empty[F]
+  private val vehicleRoutes = VehicleRoutes[F]().routes
+
+  private val openRoutes: HttpRoutes[F] = vehicleRoutes
 
   private val routes: HttpRoutes[F] = Router(
-    "v1" -> openRoutes
+    "/v1" -> openRoutes
   )
 
   private val middleware: HttpRoutes[F] => HttpRoutes[F] = {
