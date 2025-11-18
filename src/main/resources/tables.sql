@@ -2,7 +2,7 @@
 -- because the entrypoint runs this script after the DB is created.
 
 CREATE TABLE users (
-                       id BIGSERIAL PRIMARY KEY,
+                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                        name VARCHAR(255),
                        email VARCHAR(255),
                        sub VARCHAR(255),
@@ -10,22 +10,22 @@ CREATE TABLE users (
 );
 
 CREATE TABLE vehicle_type (
-                              id BIGSERIAL PRIMARY KEY,
-                              name VARCHAR(255)
+                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                            name VARCHAR(255)
 );
 
 CREATE TABLE vehicle (
-                         id BIGSERIAL PRIMARY KEY,
+                         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                          name VARCHAR(255),
-                         type_id BIGINT REFERENCES vehicle_type(id),
+                         type_id UUID REFERENCES vehicle_type(id),
                          date TIMESTAMP,
                          colour VARCHAR(255),
-                         user_id BIGINT REFERENCES users(id)
+                         user_id UUID REFERENCES users(id)
 );
 
 CREATE TABLE image_url (
-                           id BIGSERIAL PRIMARY KEY,
+                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                            key VARCHAR(255),
                            url VARCHAR(255),
-                           vehicle_id BIGINT REFERENCES vehicle(id)
+                           vehicle_id UUID REFERENCES vehicle(id)
 );
