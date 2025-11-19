@@ -11,7 +11,9 @@ services:
       - POSTGRES_DB=hotwheels_store
       - POSTGRES_PASSWORD=my-password
     volumes:
-      - ./src/main/resources/tables.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/main/resources/tables.sql:/docker-entrypoint-initdb.d/01-tables.sql
+      - ./src/main/resources/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s

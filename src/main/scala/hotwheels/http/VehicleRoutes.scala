@@ -1,40 +1,27 @@
 package hotwheels.http
 
-import cats.effect.Sync
+import cats.effect.Concurrent
+import cats.implicits.toFlatMapOps
+import cats.syntax.all._
 import hotwheels.domain.vehicle._
 import hotwheels.service.Vehicles
-import org.http4s.HttpRoutes
-import org.http4s.circe.CirceEntityCodec._
+import org.http4s._
+import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
+import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
 
-// GET /api/v1/vehicle/{id}
-// POST /api/v1/vehicle/create
-// GET /api/v1/vehicle?name=...
-// GET /api/v1/vehicle/type/{id}
-// GET /api/v1/vehicle/date?start=...&end=...
-// GET /api/v1/vehicle/user
+final case class VehicleRoutes[F[_] : Concurrent](vehicles: Vehicles[F]) extends Http4sDsl[F] {
 
-final case class VehicleRoutes[F[_] : Sync](vehicles: Vehicles[F]) extends Http4sDsl[F] {
-
-  private val prefixPath = "/vehicles"
-
-  val d = implicitly[io.circe.Decoder[VehicleRequest]]
   private val httpRoutes: HttpRoutes[F] = HttpRoutes.of[F] {
-    case GET -> Root => Ok("meh")
 
-
-    //    case req @ POST -> Root / "create" =>
-
-    //      for {
-    //        vehicleReq <- req.as[VehicleRequest]   // JSON body decoded here
-    //        created <- vehicles.createVehicle(vehicleReq)
-    //        resp <- Created(vehicleReq)               // encoded to JSON automatically
-    //      } yield resp
-    //  }
+    case req@POST -> Root / "create" =>
+      for {
+        vehicleReq <- req.asJsonDecode[VehicleRequest]
+        created <- vehicles.createVehicle(vehicleReq)
+        res <- Created(created)
+      } yield res
   }
 
-  val routes: HttpRoutes[F] = Router(prefixPath -> httpRoutes)
-
-
+  val routes: HttpRoutes[F] = Router("/vehicles" -> httpRoutes)
 }

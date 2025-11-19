@@ -38,12 +38,12 @@ private object VehicleSQL {
       case n ~ vt ~ d ~ c ~ u => VehicleRequest(n, vt, d, c, u)
     } { vr =>
       // build nested tuple by nesting plain tuples, not using ~
-      (((vr.name, vr.vehicleType), vr.date), vr.color) -> vr.user  // pseudo-code
+      (((vr.name, vr.vehicleType), vr.date), vr.color) -> vr.user
     }
 
   val insertVehicle: Command[VehicleRequest] =
     sql"""
-         INSERT INTO vehicles
+         INSERT INTO vehicle (name, type_id, date, colour, user_id)
          VALUES ($codec)
          """.command
 }

@@ -13,6 +13,13 @@ import java.util.UUID
 
 object vehicle {
 
+  implicit val localDateTimeEncoder: Encoder[LocalDateTime] =
+    Encoder.encodeString.contramap[LocalDateTime](_.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+
+  implicit val localDateTimeDecoder: Decoder[LocalDateTime] =
+    Decoder.decodeString.map(str => LocalDateTime.parse(str, DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+
+
   @derive(decoder, encoder, eqv, show)
   @newtype
   case class VehicleId(value: UUID)
@@ -39,11 +46,5 @@ object vehicle {
                             color: String,
                             user: UserId)
 
-
-  implicit val localDateTimeEncoder: Encoder[LocalDateTime] =
-    Encoder.encodeString.contramap[LocalDateTime](_.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-
-  implicit val localDateTimeDecoder: Decoder[LocalDateTime] =
-    Decoder.decodeString.map(str => LocalDateTime.parse(str, DateTimeFormatter.ISO_LOCAL_DATE_TIME))
 
 }
