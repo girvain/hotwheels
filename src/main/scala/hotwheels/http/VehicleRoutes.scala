@@ -21,6 +21,11 @@ final case class VehicleRoutes[F[_] : Concurrent](vehicles: Vehicles[F]) extends
         created <- vehicles.createVehicle(vehicleReq)
         res <- Created(created)
       } yield res
+
+    case GET -> Root / "/all" =>
+      Ok(vehicles.findAllVehicles())
+
+//    case GET -> Root /
   }
 
   val routes: HttpRoutes[F] = Router("/vehicles" -> httpRoutes)
