@@ -22,7 +22,7 @@ final case class VehicleRoutes[F[_] : Concurrent](vehicles: Vehicles[F]) extends
         res <- Created(created)
       } yield res
 
-    case GET -> Root / "/all" =>
+    case GET -> Root / "all" =>
       Ok(vehicles.findAllVehicles())
 
 //    case GET -> Root /

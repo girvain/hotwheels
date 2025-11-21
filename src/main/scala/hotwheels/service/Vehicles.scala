@@ -3,10 +3,14 @@ package hotwheels.service
 import cats.effect.Resource
 import cats.effect.kernel.MonadCancelThrow
 import cats.implicits.toFunctorOps
+import hotwheels.domain.user.UserId
 import hotwheels.domain.vehicle.{Vehicle, VehicleId, VehicleRequest}
 import hotwheels.service.VehicleSQL.{insertVehicle, selectAll, selectById}
 import hotwheels.sql.codecs._
 import skunk.Session
+
+import java.time.LocalDateTime
+import java.util.UUID
 
 trait Vehicles[F[_]] {
   def createVehicle(vehicleRequest: VehicleRequest): F[VehicleRequest]
@@ -51,7 +55,7 @@ private object VehicleSQL {
 
   import skunk._
   import skunk.codec.all._
-  import skunk.implicits._ // <-- THIS MUST BE INSIDE THE OBJECT
+  import skunk.implicits._
 
   val codec: Codec[VehicleRequest] =
     (varchar ~ vehicleTypeId ~ timestamp ~ varchar ~ userId).imap {
@@ -63,9 +67,21 @@ private object VehicleSQL {
 
   val vehicleDecoder: Decoder[Vehicle] =
     (vehicleId ~ varchar ~ vehicleTypeId ~ timestamp ~ varchar ~ userId).map {
-      case v ~ n ~ vt ~ d ~ c ~ u =>
-        Vehicle(v, n, vt, d, c, u)
+      case i ~ n ~ t ~ d ~ c ~ u =>
+        Vehicle(i, n, t, d, c, u)
     }
+
+
+  val vehicleDecoder2: Decoder[Vehicle] =
+    (vehicleId ~ vehicleTypeId).map {
+      case i ~ vt =>
+        Vehicle(i,
+          "",
+          vt,
+//          VehicleTypeId(UUID.randomUUID()),
+          LocalDateTime.now(), "", UserId(UUID.randomUUID()))
+    }
+
 
   val insertVehicle: Command[VehicleRequest] = // need to use the column names here coz the order matters and we generate the UUID on the DB
     sql"""
@@ -73,15 +89,23 @@ private object VehicleSQL {
          VALUES ($codec)
          """.command
 
-  val selectAll: Query[Void, Vehicle] =
-    sql"""
-         SELECT * FROM vehicle
-       """.query(vehicleDecoder)
+  //  val selectAll: Query[Void, Vehicle] =
+  //    sql"""
+  //           SELECT * FROM vehicle
+  //       """.query(vehicleDecoder)
 
   val selectById: Query[VehicleId, Vehicle] =
     sql"""
          SELECT * FROM vehicle WHERE id = $vehicleId
        """.query(vehicleDecoder)
+
+  // ----- Query example -----
+  val selectAll: Query[Void, Vehicle] =
+    sql"""
+    SELECT id, type_id
+    FROM vehicle
+  """.query(vehicleDecoder2)
+
 }
 
 
