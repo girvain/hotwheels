@@ -57,7 +57,6 @@ private object VehicleSQL {
     (varchar ~ vehicleTypeId ~ timestamp ~ varchar ~ userId).imap {
       case n ~ vt ~ d ~ c ~ u => VehicleRequest(n, vt, d, c, u)
     } { vr =>
-      // build nested tuple by nesting plain tuples, not using ~
       (((vr.name, vr.vehicleType), vr.date), vr.color) -> vr.user
     }
 
