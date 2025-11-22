@@ -3,29 +3,29 @@
 
 CREATE TABLE users (
                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                       name VARCHAR(255),
-                       email VARCHAR(255),
-                       sub VARCHAR(255),
-                       profile_picture VARCHAR(255)
+                       name VARCHAR,
+                       email VARCHAR,
+                       sub VARCHAR,
+                       profile_picture VARCHAR
 );
 
 CREATE TABLE vehicle_type (
                             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                            name VARCHAR(255)
+                            name VARCHAR
 );
 
 CREATE TABLE vehicle (
                          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                         name VARCHAR(255),
+                         name VARCHAR,
                          type_id UUID REFERENCES vehicle_type(id),
                          date TIMESTAMP,
-                         colour VARCHAR(255),
+                         colour VARCHAR,
                          user_id UUID REFERENCES users(id)
 );
 
 CREATE TABLE image_url (
                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                           key VARCHAR(255),
-                           url VARCHAR(255),
+                           key VARCHAR,
+                           url VARCHAR,
                            vehicle_id UUID REFERENCES vehicle(id)
 );
