@@ -5,3 +5,8 @@
 *.iml
 *.iws
 
+# SBT UI/IDE files
+sbt.json
+project/project/
+project/target/
+target/
