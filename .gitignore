@@ -1,12 +1,39 @@
 **/target
 
-# IntelliJ IDEA
+# === IntelliJ IDEA ===
 .idea/
 *.iml
 *.iws
 
-# SBT UI/IDE files
-sbt.json
-project/project/
-project/target/
+# JetBrains specific
+out/
+
+# === Metals / Bloop ===
+.metals/
+.bloop/
+.vscode/
+workspace-storage/
+
+# === SBT ===
 target/
+project/target/
+project/project/
+
+# SBT logs
+logs/
+.history
+
+# SBT bloop settings (generated automatically)
+project/.bloop/
+
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === Scala ===
+# (Optional) If using ammonite
+.amm/
+
+# === Misc ===
+*.log
