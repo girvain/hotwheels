@@ -1,7 +1,7 @@
 package hotwheels.resources
 
 import cats.effect.std.Console
-import cats.effect.{Concurrent, Resource}
+import cats.effect.{Resource, Temporal}
 import cats.syntax.all._
 import fs2.io.net.Network
 import hotwheels.config.types.{AppConfig, PostgreSQLConfig}
@@ -19,7 +19,7 @@ sealed abstract class AppResources[F[_]](
 
 object AppResources {
 
-  def make[F[_]: Concurrent: Console: Logger: MkHttpClient: Network](
+  def make[F[_]: Temporal: Logger: MkHttpClient: Network: Console](
       cfg: AppConfig
   ): Resource[F, AppResources[F]] = {
 

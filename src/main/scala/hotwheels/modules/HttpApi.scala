@@ -1,7 +1,8 @@
 package hotwheels.modules
 
 import cats.effect.Async
-import hotwheels.http.VehicleRoutes
+import cats.implicits.toSemigroupKOps
+import hotwheels.http.{UserRoutes, VehicleRoutes}
 import hotwheels.resources.Services
 import org.http4s.implicits._
 import org.http4s.server.Router
@@ -18,8 +19,9 @@ object HttpApi {
 sealed abstract class HttpApi[F[_] : Async](services: Services[F]) {
 
   private val vehicleRoutes = VehicleRoutes[F](services.vehicles).routes
+  private val userRoutes = UserRoutes[F](services.users).routes
 
-  private val openRoutes: HttpRoutes[F] = vehicleRoutes
+  private val openRoutes: HttpRoutes[F] = vehicleRoutes <+> userRoutes
 
   private val routes: HttpRoutes[F] = Router(
     "/api/v1" -> openRoutes

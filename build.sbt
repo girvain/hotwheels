@@ -15,7 +15,11 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       // "core" module - IO, IOApp, schedulers
       // This pulls in the kernel and std modules automatically.
-      "org.typelevel" %% "cats-effect" % "3.5.3",
+//      "org.typelevel" %% "cats-effect" % "3.5.3",
+
+      "org.typelevel" %% "cats-core" % "2.10.0",
+      "org.typelevel" %% "cats-kernel" % "2.10.0",
+
       // concurrency abstractions and primitives (Concurrent, Sync, Async etc.)
       "org.typelevel" %% "cats-effect-kernel" % "3.5.3",
       // standard "effect" library (Queues, Console, Random etc.)
@@ -76,8 +80,9 @@ lazy val root = (project in file("."))
       //    "eu.timepit" %% "refined-scalacheck" % "0.9.29" % Test,
 
       // Database
-      "org.tpolecat" %% "skunk-core" % "0.3.1",
-      "org.tpolecat" %% "skunk-circe" % "0.3.1",
+//      "org.tpolecat" %% "skunk-core" % "0.3.1",
+      "org.tpolecat" %% "skunk-core" % "0.6.3",
+//      "org.tpolecat" %% "skunk-circe" % "0.6.3",
 
       // Units
       "org.typelevel" %% "squants" % "1.8.3",
