@@ -13,7 +13,7 @@ trait Vehicles[F[_]] {
 
   def findAllVehicles(): F[List[Vehicle]]
 
-  def findById(vehicleId: VehicleId): F[Vehicle]
+  def findById(vehicleId: VehicleId): F[Option[Vehicle]]
 }
 
 object Vehicles {
@@ -35,14 +35,13 @@ object Vehicles {
         }
       }
 
-      def findById(vehicleId: VehicleId): F[Vehicle] = {
+      def findById(vehicleId: VehicleId): F[Option[Vehicle]] = {
         postgres.use { session =>
           session.prepare(selectById).use {
-            _.unique(vehicleId)
+            _.option(vehicleId)
           }
         }
       }
-
     }
   }
 }

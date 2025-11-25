@@ -19,7 +19,6 @@ object vehicle {
   implicit val localDateTimeDecoder: Decoder[LocalDateTime] =
     Decoder.decodeString.map(str => LocalDateTime.parse(str, DateTimeFormatter.ISO_LOCAL_DATE_TIME))
 
-
   @derive(decoder, encoder, eqv, show)
   @newtype
   case class VehicleId(value: UUID)
@@ -48,3 +47,21 @@ object vehicle {
 
 
 }
+
+
+//@newtype case class VehicleId(value: UUID)
+//object VehicleId {
+//  def fromString(s: String): Either[String, VehicleId] =
+//    Either.catchNonFatal(UUID.fromString(s))
+//      .map(VehicleId)
+//      .leftMap(_ => s"Invalid UUID: $s")
+//}
+//
+//// http4s decoder for path param
+//import org.http4s.QueryParamDecoder
+//import org.http4s.dsl.impl.PathParamDecoder
+//
+//implicit val vehicleIdParamDecoder: PathParamDecoder[VehicleId] =
+//  PathParamDecoder.fromAttempt("VehicleId")(s =>
+//    VehicleId.fromString(s).left.map(err => new Exception(err))
+//  )
