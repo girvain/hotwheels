@@ -39,11 +39,11 @@ object vehicle {
   case class VehicleType(id: VehicleTypeId, name: String)
 
   @derive(decoder, encoder)
-  case class VehicleRequest(name: String,
-                            vehicleType: VehicleTypeId,
-                            date: LocalDateTime,
-                            color: String,
-                            user: UserId)
+  case class CreateVehicleRequest(name: String,
+                                  vehicleType: VehicleTypeId,
+                                  date: LocalDateTime,
+                                  color: String,
+                                  user: UserId)
 
 
 }

@@ -15,8 +15,6 @@ import org.http4s.server.Router
 // GET /api/v1/vehicle/type/{id}
 // GET /api/v1/vehicle/date?start=...&end=...
 // GET /api/v1/vehicle/user
-// PUT /api/v1/vehicle/update
-// DELETE /api/v1/vehicle/delete
 
 final case class VehicleRoutes[F[_] : Concurrent](vehicles: Vehicles[F]) extends Http4sDsl[F] {
 
@@ -24,7 +22,7 @@ final case class VehicleRoutes[F[_] : Concurrent](vehicles: Vehicles[F]) extends
 
     case req@POST -> Root / "create" =>
       for {
-        vehicleReq <- req.asJsonDecode[VehicleRequest]
+        vehicleReq <- req.asJsonDecode[CreateVehicleRequest]
         created <- vehicles.createVehicle(vehicleReq)
         res <- Created(created)
       } yield res
@@ -39,7 +37,15 @@ final case class VehicleRoutes[F[_] : Concurrent](vehicles: Vehicles[F]) extends
           case None => NotFound()
         }
 
-    case
+    case req@PUT -> Root / "update" =>
+      for {
+        vehicle <- req.asJsonDecode[Vehicle]
+        updated <- vehicles.updateVehicle(vehicle)
+        res <- Ok(updated)
+      } yield res
+
+    case DELETE -> Root / "delete" / UUIDVar(idParam) =>
+      vehicles.deleteVehicle(VehicleId(idParam)).flatMap { _ => Ok() }
 
   }
 
